@@ -27,6 +27,7 @@ or
 
 ## Current state
 
-Here is a screenshot of the current state of the application (With the `Fluent-dark-compact` gtk theme):
+Here is a screenshot of the current state of the application (With the `Fluent-dark-compact` and the `vimix-dark-laptop-ruby` gtk themes):
 
-![homescreen](https://github.com/Erdragh/tedditor/raw/main/tedditor.png)
+![fluent](https://github.com/Erdragh/tedditor/raw/main/tedditor.png "Screenshot with `Fluent-dark-compact`")
+![vimix](https://github.com/Erdragh/tedditor/raw/main/tedditor2.png "Screenshot with `vimix-dark-laptop-ruby`")
