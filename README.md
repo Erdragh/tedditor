@@ -31,4 +31,4 @@ There also will not be a drawing area anywhere in the program, it is just there 
 
 Here is a screenshot of the current state of the application (With the `vimix-dark-laptop-ruby` gtk theme):
 
-![vimix](https://github.com/Erdragh/tedditor/raw/main/tedditor.png "Screenshot with `vimix-dark-laptop-ruby`")
+![vimix](https://github.com/Erdragh/tedditor/raw/main/preview.png "Screenshot with `vimix-dark-laptop-ruby`")
