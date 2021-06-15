@@ -1,1 +1,17 @@
 .vscode
+.deps
+autom4te.cache
+aclocal.m4
+compile
+config.log
+config.status
+configure
+demo.c
+depcomp
+install-sh
+Makefile
+Makefile.in
+missing
+tedditor_prog
+tedditor.o
+configure.ac
