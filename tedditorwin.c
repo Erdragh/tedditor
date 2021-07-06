@@ -11,13 +11,15 @@ struct _TedditorWindow
 G_DEFINE_TYPE(TedditorWindow, tedditor_window, GTK_TYPE_APPLICATION_WINDOW);
 
 static void
-tedditor_window_init (TedditorWindow *app)
+tedditor_window_init (TedditorWindow *win)
 {
+    gtk_widget_init_template (GTK_WIDGET (win));
 }
 
 static void
 tedditor_window_class_init (TedditorWindowClass *class)
 {
+    gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/erdragh/tedditor/window.ui");
 }
 
 TedditorWindow *
