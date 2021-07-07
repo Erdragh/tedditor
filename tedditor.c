@@ -16,6 +16,41 @@ tedditor_init (Tedditor *app)
 }
 
 static void
+preferences_activated (GSimpleAction *action,
+                       GVariant *parameter,
+                       gpointer app)
+{
+}
+
+static void quit_activated (GSimpleAction *action,
+                            GVariant *parameter,
+                            gpointer app)
+{
+    g_application_quit (G_APPLICATION (app));
+}
+
+static GActionEntry app_entries[] =
+{
+    { "preferences", preferences_activated, NULL, NULL, NULL },
+    { "quit", quit_activated, NULL, NULL, NULL }
+};
+
+static void
+tedditor_startup (GApplication *app)
+{
+    const char *quit_accels[2] = { "<Ctrl>Q", NULL };
+
+    G_APPLICATION_CLASS (tedditor_parent_class)->startup (app);
+
+    g_action_map_add_action_entries (G_ACTION_MAP (app),
+                                     app_entries, G_N_ELEMENTS (app_entries),
+                                     app);
+    gtk_application_set_accels_for_action (GTK_APPLICATION (app),
+                                           "app.quit",
+                                           quit_accels);
+}
+
+static void
 tedditor_activate (GApplication *app)
 {
     TedditorWindow *win;
@@ -48,6 +83,7 @@ tedditor_open (GApplication *app,
 
 static void
 tedditor_class_init (TedditorClass *class) {
+    G_APPLICATION_CLASS (class)->startup = tedditor_startup;
     G_APPLICATION_CLASS (class)->activate = tedditor_activate;
     G_APPLICATION_CLASS (class)->open = tedditor_open;
 }

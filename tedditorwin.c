@@ -8,6 +8,7 @@ struct _TedditorWindow
     GtkApplicationWindow parent;
 
     GtkWidget *stack;
+    GtkWidget *gears;
 };
 
 G_DEFINE_TYPE(TedditorWindow, tedditor_window, GTK_TYPE_APPLICATION_WINDOW);
@@ -15,7 +16,15 @@ G_DEFINE_TYPE(TedditorWindow, tedditor_window, GTK_TYPE_APPLICATION_WINDOW);
 static void
 tedditor_window_init (TedditorWindow *win)
 {
+    GtkBuilder *builder;
+    GMenuModel *menu;
+
     gtk_widget_init_template (GTK_WIDGET (win));
+
+    builder = gtk_builder_new_from_resource ("/com/github/erdragh/tedditor/gears-menu.ui");
+    menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
+    gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (win->gears), menu);
+    g_object_unref (builder);
 }
 
 static void
@@ -24,6 +33,7 @@ tedditor_window_class_init (TedditorWindowClass *class)
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/erdragh/tedditor/window.ui");
 
     gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TedditorWindow, stack);
+    gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TedditorWindow, gears);
 }
 
 TedditorWindow *
