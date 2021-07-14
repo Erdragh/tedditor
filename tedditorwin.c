@@ -7,6 +7,7 @@ struct _TedditorWindow
 {
     GtkApplicationWindow parent;
 
+    GSettings *settings;
     GtkWidget *stack;
     GtkWidget *gears;
 };
@@ -25,11 +26,28 @@ tedditor_window_init (TedditorWindow *win)
     menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
     gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (win->gears), menu);
     g_object_unref (builder);
+
+    win->settings = g_settings_new ("com.github.erdragh.tedditor");
+    g_settings_bind (win->settings, "transition", win->stack, "transition-type", G_SETTINGS_BIND_DEFAULT);
+}
+
+static void 
+tedditor_window_dispose (GObject *object)
+{
+    TedditorWindow *win;
+
+    win = TEDDITOR_APP_WINDOW (object);
+
+    g_clear_object (&win->settings);
+
+    G_OBJECT_CLASS (tedditor_window_parent_class)->dispose (object);
 }
 
 static void
 tedditor_window_class_init (TedditorWindowClass *class)
 {
+    G_OBJECT_CLASS (class)->dispose = tedditor_window_dispose;
+
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/erdragh/tedditor/window.ui");
 
     gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TedditorWindow, stack);
@@ -50,6 +68,9 @@ tedditor_window_open (TedditorWindow *win,
     GtkWidget *scrolled, *view;
     char *contents;
     gsize length;
+    GtkTextBuffer *buffer;
+    GtkTextTag *tag;
+    GtkTextIter start_iter, end_iter;
 
     basename = g_file_get_basename (file);
 
@@ -67,13 +88,20 @@ tedditor_window_open (TedditorWindow *win,
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), view);
     gtk_stack_add_titled (GTK_STACK (win->stack), scrolled, basename, basename);
 
+    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+
     if (g_file_load_contents (file, NULL, &contents, &length, NULL, NULL))
     {
-        GtkTextBuffer *buffer;
-
-        buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
         gtk_text_buffer_set_text (buffer, contents, length);
         g_free (contents);
     }
+
+    tag = gtk_text_buffer_create_tag (buffer, NULL, NULL);
+    g_settings_bind (win->settings, "font", tag, "font", G_SETTINGS_BIND_DEFAULT);
+
+    gtk_text_buffer_get_start_iter (buffer, &start_iter);
+    gtk_text_buffer_get_end_iter (buffer, &end_iter);
+    gtk_text_buffer_apply_tag (buffer, tag, &start_iter, &end_iter);
+
     g_free (basename);
 }
